@@ -1,0 +1,32 @@
+{
+  "name": "graduation_thesis_project",
+  "version": "1.0.0",
+  "description": "clothes shop website for graduation thesis fit hcmute",
+  "main": "index.js",
+  "scripts": {
+    "start" : "node server.js",
+    "server" : "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/NguyenThiThuc97/graduation_thesis.git"
+  },
+  "keywords": [
+    "ndtt8797"
+  ],
+  "author": "ndtt8797",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/NguyenThiThuc97/graduation_thesis/issues"
+  },
+  "homepage": "https://gitlab.com/NguyenThiThuc97/graduation_thesis#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^4.1.0",
+    "express": "^4.16.4",
+    "mongoose": "^5.5.6"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.0"
+  }
+}
