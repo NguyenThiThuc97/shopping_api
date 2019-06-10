@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 /*call to Route.js*/
 const tbSchema = require("./Route/Route");
 app.use('/', tbSchema);
-// app.use('/images', express.static('images'))
+app.use('/images', express.static('images'))
 /*end: call to routers.js*/
 
 const port = process.env.PORT || 5000

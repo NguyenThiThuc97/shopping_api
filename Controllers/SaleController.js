@@ -9,7 +9,7 @@ module.exports =
         })
     },
     getOne: function(req, res){
-        util.getOne(SaleModel).then(result => {
+        util.getOne(SaleModel, req.params.id).then(result => {
             res.json(result)
         })
     },
@@ -24,5 +24,10 @@ module.exports =
     },
     edit: function(req, res){
         
+    },
+    delete: function(req, res){
+        util.delete(SaleModel, req.params.id).then(result => {
+            res.json(result)
+        })
     }
 };

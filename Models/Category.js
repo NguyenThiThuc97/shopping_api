@@ -11,7 +11,7 @@ const ItemSchema = new Schema({
     },
     name : {
         type : String,
-        required : true
+        // required : true
     },
     products : {
         type : [Product.schema]

@@ -22,7 +22,7 @@ module.exports = class Util {
     }
     create(NewItem){
         return NewItem.save().then(result => {
-            return result["id"]
+            return result
         })
     }
     encryptionPassword(text){
@@ -31,6 +31,17 @@ module.exports = class Util {
     checkExist(Model, id){
         return Model.find({id : id}).then(result => {
             return result.length !== 0 ? true : false
+        })
+    }
+    delete(Model, id){
+        return Model.findOneAndRemove({'id' : id}).then((result) => {
+            console.log(result)
+            if(result === null){
+                return {status : false}
+            }
+            else{
+                return {status : true, result : result}
+            }
         })
     }
 }

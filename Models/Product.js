@@ -24,14 +24,23 @@ const ItemSchema = new Schema({
     images : {
         type : [Object]
     },
+    price : {
+        type : Number,
+        required : true
+    },
     sale : {
-        type : [Sale.schema]
+        // type : [Sale.schema]
+        type : Sale.schema
     },
 	time : {
 		type : Date,
 		default : Date.now,
 		required : true
-	}
+    },
+    cate_id:{
+        type: Number,
+        required : true
+    }
 })
 ItemSchema.plugin(AutoIncrement, {id : 'ProductIdAuto', inc_field : 'id'})
 
