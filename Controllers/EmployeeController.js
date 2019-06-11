@@ -25,6 +25,17 @@ module.exports =
         })
     },
     edit: function(req, res){
-        
+        var item_edit = req.body
+        var emp_id = item_edit.id
+        var emp_usrname = item_edit.username
+        var emp_fullname = item_edit.fullname
+        var emp_role = item_edit.role
+        EmployeeModel.findOneAndUpdate({id : emp_id}, {$set : 
+                                                        {username : emp_usrname,
+                                                        fullname : emp_fullname,
+                                                        emp_role : emp_role}
+                                                    }).then(result => {
+            res.json(result)
+        })
     }
 };
