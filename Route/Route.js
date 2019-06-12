@@ -13,18 +13,34 @@ router.route('/category/create').post(category.create);
 router.route('/category/delete/:id').get(category.delete)
 
 /*2. customer*/ 
+var storageUser = multer.diskStorage({
+    destination : function (req, file, cb){
+        cb(null, 'images/Users')
+    },
+    filename : function (req, file, cb) {
+        if(file){
+            cb(null, file.originalname)
+        }
+      }
+})
+var uploadUser = multer({ storage: storageUser })
+
 const customer = require('./../Controllers/CustomerController');
 router.route('/customer').get(customer.get);
 router.route('/customer/:id').get(customer.getOne);
-router.route('/customer/create').post(customer.create);
-// router.route('/customer/edit').post(customer.edit);
+router.route('/customer/create').post(uploadUser.single("image"), customer.create);
+router.route('/customer/edit').post(customer.edit);
+router.route('/customer/change_password').post(customer.changePwd);
+router.route('/customer/delete/:id').get(customer.getOne);
 
 /*3. employee*/ 
 const employee = require('./../Controllers/EmployeeController');
 router.route('/employee').get(employee.get);
 router.route('/employee/:id').get(employee.getOne);
-router.route('/employee/create').post(employee.create);
-// router.route('/employee/edit').post(employee.edit);
+router.route('/employee/create').post(uploadUser.single("image"), employee.create);
+// router.route('/employee/edit').post(customer.edit);
+// router.route('/employee/change_password').post(customer.changePwd);
+router.route('/employee/delete/:id').get(customer.getOne);
 
 /*4. sale*/ 
 const sale = require('./../Controllers/SaleController');

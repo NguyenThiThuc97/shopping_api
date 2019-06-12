@@ -20,6 +20,9 @@ const ItemSchema = new Schema({
         type : String,
         required : true
     },
+    image : {
+        type : String
+    },
     role : {
         type : Object,
         required : true

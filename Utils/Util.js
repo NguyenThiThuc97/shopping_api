@@ -44,4 +44,16 @@ module.exports = class Util {
             }
         })
     }
+    changePwd(Model, id, new_password, old_password){//password have not encrypt yet
+        return Model.findOne({id : id}).then(result => {
+            if(this.encryptionPassword(old_password) === result.password){
+                return Model.findOneAndUpdate({id : id}, {$set : {password : this.encryptionPassword(new_password)}}).then(result => {
+                    return result
+                })
+            }
+            else{
+                return false
+            }
+        })
+    }
 }
