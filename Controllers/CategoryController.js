@@ -14,12 +14,18 @@ module.exports =
         })
     },
     create: function(req, res){
-        var newItem = new CategoryModel({
-            name : req.body.name         
-        })
-        util.create(newItem).then(result => {
-            res.json(result)
-        })
+        if(req.body.name){
+            var newItem = new CategoryModel({
+                name : req.body.name         
+            })
+            util.create(newItem).then(result => {
+                res.json(result)
+            })
+        }
+        else{
+            res.json("Name is required!")
+        }
+        
     },
     edit: function(req, res){
         

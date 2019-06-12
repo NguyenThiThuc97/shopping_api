@@ -14,13 +14,19 @@ module.exports =
         })
     },
     create: function(req, res){
-        var newItem = new SaleModel({
-            name : req.body.name,
-            calculation : req.body.calculation
-        })
-        util.create(newItem).then(result => {
-            res.json(result)
-        })
+        if(req.body.name){
+            var newItem = new SaleModel({
+                name : req.body.name,
+                calculation : req.body.calculation
+            })
+            util.create(newItem).then(result => {
+                res.json(result)
+            })
+        }
+        else{
+            res.json("Cannot save!")
+        }
+        
     },
     edit: function(req, res){
         
