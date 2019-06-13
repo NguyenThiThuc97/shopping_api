@@ -9,7 +9,7 @@ module.exports =
         })
     },
     getOne: function(req, res){
-        util.getOne(EmployeeModel).then(result => {
+        util.getOne(EmployeeModel, req.params.id).then(result => {
             res.json(result)
         })
     },
@@ -20,7 +20,10 @@ module.exports =
             fullname : req.body.fullname,
             image : req.file ? req.file.originalname : "",
             password : util.encryptionPassword(req.body.password),
-            role : req.body.role
+            role : req.body.role,
+            address : req.body.address,
+            phone : req.body.phone,
+            email : req.body.email
         })
         util.create(newItem).then(result => {
             res.json(result)
@@ -39,5 +42,32 @@ module.exports =
                                                         }).then(result => {
             res.json(result)
         })
+    },
+    delete: function(req, res){
+        util.delete(EmployeeModel, req.params.id).then(result => {
+            res.json(result)
+        })
+    },
+    changePwd: function(req, res){
+        if(req.body.new_pwd === req.body.old_pwd){
+            util.changePwd(EmployeeModel, req).then(result => {
+                if(result){
+                    res.json({
+                        status : true,
+                        result : result
+                    })
+                }
+                else{
+                    res.json({
+                        status : false,
+                    })
+                }
+            })
+        }
+        else{
+            res.json({
+                status : false,
+            })
+        }
     }
 };

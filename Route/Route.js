@@ -38,9 +38,9 @@ const employee = require('./../Controllers/EmployeeController');
 router.route('/employee').get(employee.get);
 router.route('/employee/:id').get(employee.getOne);
 router.route('/employee/create').post(uploadUser.single("image"), employee.create);
-// router.route('/employee/edit').post(customer.edit);
-// router.route('/employee/change_password').post(customer.changePwd);
-router.route('/employee/delete/:id').get(customer.getOne);
+router.route('/employee/edit').post(employee.edit);
+router.route('/employee/change_password').post(employee.changePwd);
+router.route('/employee/delete/:id').get(employee.delete);
 
 /*4. sale*/ 
 const sale = require('./../Controllers/SaleController');

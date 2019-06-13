@@ -26,7 +26,19 @@ const ItemSchema = new Schema({
     role : {
         type : Object,
         required : true
-    }
+    },
+    email : {
+        type : String,
+        required : true
+    },
+    phone : {
+        type : String,
+        required : true
+    },
+    address : {
+        type : String,
+        required : true
+    },
 })
 ItemSchema.plugin(AutoIncrement, {id : 'EmpIdAuto', inc_field : 'id'})
 
