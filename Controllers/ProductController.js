@@ -23,8 +23,8 @@ module.exports =
     },
     create: function(req, res){
         util.checkExist(CategoryModel, req.body.category).then(checkExist => {
-            var sale =  module.exports.getJedisQuery(req.body.sale);     
-            sale.then(function(input_sale) {   
+            var sale =  module.exports.getJedisQuery(req.body.sale);
+            sale.then(function(input_sale) {
                 if(checkExist){
                     var newItem = new ProductModel({
                         title : req.body.title,
@@ -33,15 +33,15 @@ module.exports =
                             name : req.body.manufacture_details_name,
                             model : req.body.manufacture_details_model
                         },
+                        price : req.body.price,
                         details : [req.body.details],
-                        images : req.file ? req.file.originalname : "",
+                        images : req.file ? [req.file.originalname] : "",
                         sale : input_sale,
                         cate_id: req.body.category,
-                        time: req.body.time
+                        time_import: req.body.time
                     })
                     util.create(newItem).then(result => {
                         util.edit(req.body.category, newItem).then(result_cate =>{
-                            console.log("success")
                             res.json({result, result_cate})
                         })
                     })
@@ -54,25 +54,54 @@ module.exports =
         })
     },
     edit: function(req, res){
-        var product_id = req.body.id
-        var title = req.body.title
-        var description = req.body.description
-        var manufacture_details_name = req.body.manufacture_details_name
-        var manufacture_details_model = req.body.manufacture_details_model
-        var sale = input_sale
-        var cate_id = req.body.category
-        var time = req.body.time
-        var images = req.file
-        var imagesN = ""
-        if(images){
-            imagesN = images.originalname
-        }
-        // return ProductModel.findOneAndUpdate({id:product_id}, {$set:{
-        //                                                                 title : title,
-        //                                                                 description : description,
-        //                                                                 time : time,
-        //                                                                 images : imagesN
-        // })
+        console.log(req.body)
+        util.checkExist(CategoryModel, req.body.category).then(checkExist => {
+            var sale =  module.exports.getJedisQuery(req.body.sale);
+            sale.then(function(input_sale) {
+                if(checkExist){
+                    var product_id = req.body.id
+                    var title = req.body.title
+                    var description = req.body.description
+                    var manufacture_details_name = req.body.manufacture_details_name
+                    var manufacture_details_model = req.body.manufacture_details_model
+                    var price = req.body.price
+                    var sale = input_sale
+                    var cate_id = req.body.category
+                    var time = req.body.time
+                    var images = req.file
+                    var imagesN = ""
+                    if(images){
+                        imagesN = images.originalname
+                    }
+                    return ProductModel.findOneAndUpdate({id:product_id}, {$set:{
+                                                                                title : title,
+                                                                                description : description,
+                                                                                time_import : time,
+                                                                                images : [imagesN],
+                                                                                manufacture_details : {
+                                                                                    name : manufacture_details_name,
+                                                                                    model : manufacture_details_model
+                                                                                },
+                                                                                price : price,
+                                                                                sale : sale,
+                                                                                cate_id : cate_id
+
+                    }}).then((result, error) => {
+                        if(error){
+                            res.json({status : false})
+                        }
+                        else{
+                            console.log(result)
+                            res.json({status : true, result : result})
+                        }
+                    })
+                }
+                else{
+                    res.json({status : false})
+                }
+            })
+        })
+        
     },
     delete: function(req, res){
         var product_id = parseInt(req.params.id) 

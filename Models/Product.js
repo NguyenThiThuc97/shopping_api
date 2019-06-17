@@ -32,7 +32,7 @@ const ItemSchema = new Schema({
         // type : [Sale.schema]
         type : Sale.schema
     },
-	time : {
+	time_import : {
 		type : Date,
 		default : Date.now,
 		required : true
