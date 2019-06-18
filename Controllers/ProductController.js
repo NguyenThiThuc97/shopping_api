@@ -34,7 +34,7 @@ module.exports =
                             model : req.body.manufacture_details_model
                         },
                         price : req.body.price,
-                        details : [req.body.details],
+                        // details : [req.body.details],
                         images : req.file ? [req.file.originalname] : "",
                         sale : input_sale,
                         cate_id: req.body.category,
@@ -73,28 +73,52 @@ module.exports =
                     if(images){
                         imagesN = images.originalname
                     }
-                    return ProductModel.findOneAndUpdate({id:product_id}, {$set:{
-                                                                                title : title,
-                                                                                description : description,
-                                                                                time_import : time,
-                                                                                images : [imagesN],
-                                                                                manufacture_details : {
-                                                                                    name : manufacture_details_name,
-                                                                                    model : manufacture_details_model
-                                                                                },
-                                                                                price : price,
-                                                                                sale : sale,
-                                                                                cate_id : cate_id
+                    if(imagesN.length !== 0){
+                        return ProductModel.findOneAndUpdate({id:product_id}, {$set:{
+                            title : title,
+                            description : description,
+                            time_import : time,
+                            images : [imagesN],
+                            manufacture_details : {
+                                name : manufacture_details_name,
+                                model : manufacture_details_model
+                            },
+                            price : price,
+                            sale : sale,
+                            cate_id : cate_id
 
-                    }}).then((result, error) => {
-                        if(error){
-                            res.json({status : false})
-                        }
-                        else{
+                        }}).then((result, error) => {
+                            if(error){
+                                res.json({status : false})
+                            }
+                            else{
+                            res.json({status : true, result : result})
+                            }
+                        })
+                    }
+                    else{
+                        return ProductModel.findOneAndUpdate({id:product_id}, {$set:{
+                            title : title,
+                            description : description,
+                            time_import : time,
+                            manufacture_details : {
+                                name : manufacture_details_name,
+                                model : manufacture_details_model
+                            },
+                            price : price,
+                            sale : sale,
+                            cate_id : cate_id
+
+                        }}).then((result, error) => {
+                            if(error){
+                                res.json({status : false})
+                            }
+                            else{
                             console.log(result)
                             res.json({status : true, result : result})
-                        }
-                    })
+                            }
+                        })
+                    }
                 }
                 else{
                     res.json({status : false})
@@ -108,6 +132,7 @@ module.exports =
         ProductModel.findOne({id:product_id}).select("cate_id").then(cate_id => {
             if(cate_id !== null){
                 util.delete(product_id, cate_id.cate_id).then(result => {
+                    // console.log(result)
                     res.json(result)
                 })
             }
@@ -116,5 +141,37 @@ module.exports =
             }
         })
         
+    },
+    addProductDetail: function(req, res){
+       util.saveProductDetail(req).then(result => {
+        //    console.log(result)
+           if(result.statusAdd){
+               res.json({status : true, msg : result.message, details : result.result})
+           }
+           else{
+               res.json({status : false, msg : result.message})
+           }
+       })
+    },
+    getAllProductDetail: function(req, res){
+        var product_id = req.params.id
+        ProductModel.findOneAndUpdate({id : product_id}).then(result => {
+            res.json({details : result.details})
+        })
+    },
+    deleteProductDetail: function(req, res){
+        var product_id = req.params.id
+        var size = req.params.size
+        var color = req.params.color
+        ProductModel.findOneAndUpdate({id : product_id}, {"$pull":{"details":{"color":color, "size":size}}}, { multi: true }, function(err, result)
+        {
+            if(err){
+                res.json({status : false})
+            }
+            else{
+                res.json({status : true})
+            }
+            
+        })
     }
 };

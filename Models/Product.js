@@ -19,7 +19,8 @@ const ItemSchema = new Schema({
         type : Object
     },
     details : {
-        type : Object,//contain : size, color, price, quantity
+        type : [Object],//contain : size, color, price, quantity,
+        default : []
     },
     images : {
         type : [Object]

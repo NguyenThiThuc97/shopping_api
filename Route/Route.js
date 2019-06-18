@@ -70,5 +70,9 @@ router.route('/product/:id').get(product.getOne);
 router.route('/product/create').post(uploadProduct.single("images"), product.create);
 router.route('/product/edit').post(uploadProduct.single("images"), product.edit);
 router.route('/product/delete/:id').get(product.delete);
+//product detail 
+router.route('/product-detail/:id').get(product.getAllProductDetail);
+router.route('/product-detail/create').post(product.addProductDetail);
+router.route('/product-detail/delete/:id/:size/:color').get(product.deleteProductDetail);
 
 module.exports = router
