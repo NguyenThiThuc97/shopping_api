@@ -30,15 +30,23 @@ class ProductUtil extends Util {
         var product_id = parseInt(product_id)
         var size = new_size
         var color = new_color
-        return ProductModel.findOne({"id" : product_id},{"details" : {$elemMatch : {"color" : color, "size" : size}}})
-                            .then(res => {
-                                if(res.details.length === 0){//not exist => true
-                                    return true
-                                }
-                                else{
-                                    return false //exist => false
-                                }
-                            })
+        // return ProductModel.findOne({"id" : product_id},{"details" : {$elemMatch : {"color" : color, "size" : size}}})
+        //                     .then(res => {
+        //                         if(res.details.length === 0){//not exist => true
+        //                             return true
+        //                         }
+        //                         else{
+        //                             return false //exist => false
+        //                         }
+        //                     })
+        return this.getProductDetail(product_id, size, color).then(res => {
+            if(res.details.length === 0){//not exist => true
+                return true
+            }
+            else{
+                return false //exist => false
+            }
+        })
     }
 
     saveProductDetail(req)//object input "product_detail"
@@ -67,6 +75,13 @@ class ProductUtil extends Util {
                 return {message : "Product detail is existed", statusAdd : false}
             }
         })
+    }
+
+    getProductDetail(product_id, size, color){
+        return ProductModel.findOne({"id" : product_id},{"details" : {$elemMatch : {"color" : color, "size" : size}}})
+                            .then(res => {
+                                return res
+                            })
     }
 }
 module.exports = new ProductUtil()

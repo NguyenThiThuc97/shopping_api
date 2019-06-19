@@ -173,5 +173,13 @@ module.exports =
             }
             
         })
+    },
+    getProductDetail: function(req, res){
+        var product_id = req.params.id
+        var color = req.params.color
+        var size = req.params.size
+        util.getProductDetail(product_id, size, color).then(result => {
+            res.json(result.details[0])
+        })
     }
 };
