@@ -132,7 +132,7 @@ module.exports =
         ProductModel.findOne({id:product_id}).select("cate_id").then(cate_id => {
             if(cate_id !== null){
                 util.delete(product_id, cate_id.cate_id).then(result => {
-                    // console.log(result)
+                    console.log(result)
                     res.json(result)
                 })
             }
@@ -144,9 +144,8 @@ module.exports =
     },
     addProductDetail: function(req, res){
        util.saveProductDetail(req).then(result => {
-        //    console.log(result)
            if(result.statusAdd){
-               res.json({status : true, msg : result.message, details : result.result})
+                res.json({status : true, msg : result.message, details : result.result})
            }
            else{
                res.json({status : false, msg : result.message})
@@ -155,7 +154,7 @@ module.exports =
     },
     getAllProductDetail: function(req, res){
         var product_id = req.params.id
-        ProductModel.findOneAndUpdate({id : product_id}).then(result => {
+        ProductModel.findOne({id : product_id}).then(result => {
             res.json({details : result.details})
         })
     },

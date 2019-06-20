@@ -12,8 +12,8 @@ class ProductUtil extends Util {
     delete(product_id, cate_id){
         return CategoryModel.updateOne({id : cate_id}, {$pull : {products : {cate_id : cate_id}}}, { multi: true }, function(error, result){
             if(result.ok === 1 && result.n !== 0)
-                return ProductModel.findOneAndRemove({'id' : product_id}).then((result) => {
-                    if(result === null){
+                return ProductModel.findOneAndRemove({'id' : product_id}).then((result1) => {
+                    if(result1 === null){
                         return {status : false}
                     }
                     else{
