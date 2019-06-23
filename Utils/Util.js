@@ -1,11 +1,8 @@
-const CategoryModel  = require('./../Models/Category')
-const CustomerModel  = require('./../Models/Customer')
-const EmployeeModel  = require('./../Models/Employee')
-const OrdersModel  = require('./../Models/Orders')
-const ProductModel  = require('./../Models/Product')
-const SaleModel  = require('./../Models/Sale')
-
 const crypto = require('crypto')
+// const bcrypt = require('bcryptjs');
+// const config = require('./../config');
+// const jwt = require('jsonwebtoken');
+// const auth = require('./../middleware/auth');
 
 module.exports = class Util {
     constructor(){
@@ -25,6 +22,22 @@ module.exports = class Util {
             return result
         })
     }
+    editItem(Model, item){
+        return Model.findOne({id : item.id}).then(check_exist => {
+            if(check_exist){
+                return Model.findOneAndUpdate({id : item.id}, item).then((result, error) => {
+                    if(error){
+                        return {status : false}
+                    }
+                    else{
+                        return {status : true, result : item}
+                    }
+                })
+            }
+            return {status : false}
+        })
+        
+    }
     encryptionPassword(text){
         return crypto.createHmac('sha256', text).update('graduationuit2015').digest('hex')
     }
@@ -35,7 +48,7 @@ module.exports = class Util {
     }
     delete(Model, id){
         return Model.findOneAndRemove({'id' : id}).then((result) => {
-            console.log(result)
+            // console.log(result)
             if(result === null){
                 return {status : false}
             }
@@ -54,6 +67,12 @@ module.exports = class Util {
             else{
                 return false
             }
+        })
+    }
+
+    login(Model, id, password){
+        return Model.findOne({id : id, password : this.encryptionPassword(password)}).then(result => {
+            return result
         })
     }
 }

@@ -29,7 +29,15 @@ module.exports =
         
     },
     edit: function(req, res){
-        
+        var id = req.body.id
+        var name = req.body.name
+        var calculation = parseInt(req.body.calculation) 
+        var item = {
+            id,name,calculation
+        }
+        util.editItem(SaleModel, item).then(result => {
+            res.json(result)
+        })
     },
     delete: function(req, res){
         util.delete(SaleModel, req.params.id).then(result => {

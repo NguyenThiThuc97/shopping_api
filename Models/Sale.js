@@ -6,7 +6,7 @@ const Schema = mongoose.Schema
 const ItemSchema = new Schema({
     id : {
         type : Number,
-        unique: true
+        // unique: true
     },
     name : { // sale with percent of product for redution of money
         type : String, // money or percent

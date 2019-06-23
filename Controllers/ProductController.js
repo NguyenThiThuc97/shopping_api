@@ -54,7 +54,7 @@ module.exports =
         })
     },
     edit: function(req, res){
-        console.log(req.body)
+        // console.log(req.body)
         util.checkExist(CategoryModel, req.body.category).then(checkExist => {
             var sale =  module.exports.getJedisQuery(req.body.sale);
             sale.then(function(input_sale) {
@@ -92,7 +92,10 @@ module.exports =
                                 res.json({status : false})
                             }
                             else{
-                            res.json({status : true, result : result})
+                                return ProductModel.findOne({id : result.id}).then(resss => {
+                                    // console.log(resss)
+                                    res.json({status : true, result : resss})
+                                })
                             }
                         })
                     }
@@ -114,8 +117,12 @@ module.exports =
                                 res.json({status : false})
                             }
                             else{
-                            console.log(result)
-                            res.json({status : true, result : result})
+                            // console.log(result)
+                            return ProductModel.findOne({id : result.id}).then(resss => {
+                                // console.log(resss)
+                                res.json({status : true, result : resss})
+                            })
+                            
                             }
                         })
                     }
@@ -132,7 +139,7 @@ module.exports =
         ProductModel.findOne({id:product_id}).select("cate_id").then(cate_id => {
             if(cate_id !== null){
                 util.delete(product_id, cate_id.cate_id).then(result => {
-                    console.log(result)
+                    // console.log(result)
                     res.json(result)
                 })
             }

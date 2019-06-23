@@ -1,5 +1,7 @@
 const util = require('./../Utils/EmployeeUtil')
 const EmployeeModel = require('./../Models/Employee')
+const jwt = require('jsonwebtoken');
+const config = require('./../config/constant');
 
 module.exports = 
 {
@@ -69,5 +71,86 @@ module.exports =
                 status : false,
             })
         }
+    },
+
+    login: function(req, res){
+        EmployeeModel.findOne({username : req.body.username}).then(result1 => {
+            if(!result1){//login with email
+                EmployeeModel.findOne({email : req.body.username}).then(result2 => {
+                    console.log(result2)
+                    if(result2){
+                        util.login(EmployeeModel, result2.id, req.body.password).then(result => {
+                            if(result){
+                                jwt.sign(
+                                    { id: result.id },
+                                    config.jwtSecret,
+                                    { expiresIn: 3600 },
+                                    (err, token) => {
+                                        if(err) 
+                                            return  null;
+                                        else {
+                                            res.cookie('access_token', token, {
+                                                maxAge: 365 * 24 * 60 * 60 * 100,//life time
+                                                httpOnly: true,//only http can read token
+                                                //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
+                                            })
+                                            res.json({
+                                                token,
+                                                user: {
+                                                    id: result.id,
+                                                    type:"employee",
+                                                    username: result.username,
+                                                    email: result.email
+                                                }
+                                            })
+                                        }
+                                    }
+                                )
+                            }
+                            else{
+                                res.json({msg : "error"})
+                            }
+                        })
+                    }
+                    else{
+                        res.json({msg : "error"})
+                    }
+                })
+            }
+            else{//login with username
+                util.login(EmployeeModel, result1.id, req.body.password).then(result => {
+                    if(result){
+                        jwt.sign(
+                            { id: result.id },
+                            config.jwtSecret,
+                            { expiresIn: 3600 },
+                            (err, token) => {
+                                if(err) 
+                                    return  null;
+                                else {
+                                    res.cookie('access_token', token, {
+                                        maxAge: 365 * 24 * 60 * 60 * 100,//life time
+                                        httpOnly: true,//only http can read token
+                                        //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
+                                    })
+                                    res.json({
+                                        token,
+                                        user: {
+                                            id: result.id,
+                                            type:"employee",
+                                            username: result.username,
+                                            email: result.email
+                                        }
+                                    })
+                                }
+                            }
+                        )
+                    }
+                    else{
+                        res.json({msg : "error"})
+                    }
+                })
+            }
+        })
     }
 };

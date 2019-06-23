@@ -1,9 +1,17 @@
 const express = require('express')   
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const multer = require('multer');
+// const multer = require('multer');
+const cookieParser = require('cookie-parser');
+const cors = require('cors')
 
 const app = express()
+app.use(express.json()) // for parsing application/json
+app.use(cookieParser()) //cookie-parser dùng để đọc cookies của request:
+// app.use(cors({
+//     origin: 'http://localhost:7000', //Chan tat ca cac domain khac ngoai domain nay
+//     credentials: true //Để bật cookie HTTP qua CORS
+// }))
 
 //body-parser middleware
 app.use(bodyParser.json())

@@ -9,7 +9,7 @@ module.exports =
         })
     },
     getOne: function(req, res){
-        util.getOne(CategoryModel).then(result => {
+        util.getOne(CategoryModel, req.params.id).then(result => {
             res.json(result)
         })
     },
@@ -28,7 +28,21 @@ module.exports =
         
     },
     edit: function(req, res){
-        
+        var id = req.body.id
+        var name = req.body.name
+        var item = {
+            id,name
+        }
+        util.editItem(CategoryModel, item).then(result => {
+            if(result.status === true){
+                CategoryModel.findOne({id : item.id}).then(results => {
+                    res.json({status : true, result : results})
+                })
+            }
+            else {
+                res.json(result)
+            }
+        })
     },
     checkProductExistInCategory: function(category_id){
         return CategoryModel.findOne({id : category_id}).then(result => {
@@ -50,6 +64,5 @@ module.exports =
             }
             
         })
-        
     }
 };

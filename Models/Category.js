@@ -7,7 +7,7 @@ const Schema = mongoose.Schema
 const ItemSchema = new Schema({
     id : {
         type : Number,
-        unique : true
+        // unique : true
     },
     name : {
         type : String,
