@@ -77,7 +77,6 @@ module.exports =
         EmployeeModel.findOne({username : req.body.username}).then(result1 => {
             if(!result1){//login with email
                 EmployeeModel.findOne({email : req.body.username}).then(result2 => {
-                    console.log(result2)
                     if(result2){
                         util.login(EmployeeModel, result2.id, req.body.password).then(result => {
                             if(result){
@@ -89,11 +88,14 @@ module.exports =
                                         if(err) 
                                             return  null;
                                         else {
-                                            res.cookie('access_token', token, {
-                                                maxAge: 365 * 24 * 60 * 60 * 100,//life time
-                                                httpOnly: true,//only http can read token
-                                                //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
-                                            })
+                                            // // res.setHeader('Cache-Control', 'private');
+                                            // res.cookie('access_token', token, {
+                                            //     maxAge: 365 * 24 * 60 * 60 * 100,//life time
+                                            //     httpOnly: true,//only http can read token
+                                            //     //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
+                                            // })
+                                            // var username = req.cookies['access_token'];
+                                            // console.log(username ? username : "cookie not set")
                                             res.json({
                                                 token,
                                                 user: {
@@ -128,11 +130,12 @@ module.exports =
                                 if(err) 
                                     return  null;
                                 else {
-                                    res.cookie('access_token', token, {
-                                        maxAge: 365 * 24 * 60 * 60 * 100,//life time
-                                        httpOnly: true,//only http can read token
-                                        //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
-                                    })
+                                    // // res.setHeader('Cache-Control', 'private');
+                                    // res.cookie('access_token', token, {
+                                    //     maxAge: 365 * 24 * 60 * 60 * 100,//life time
+                                    //     httpOnly: true,//only http can read token
+                                    //     //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
+                                    // })
                                     res.json({
                                         token,
                                         user: {

@@ -97,11 +97,11 @@ module.exports =
                                         if(err) 
                                             return  null;
                                         else {
-                                            res.cookie('access_token', token, {
-                                                maxAge: 365 * 24 * 60 * 60 * 100,//life time
-                                                httpOnly: true,//only http can read token
-                                                //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
-                                            })
+                                            // res.cookie('access_token', token, {
+                                            //     maxAge: 365 * 24 * 60 * 60 * 100,//life time
+                                            //     httpOnly: true,//only http can read token
+                                            //     //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
+                                            // })
                                             res.json({
                                                 token,
                                                 user: {
@@ -136,11 +136,11 @@ module.exports =
                                 if(err) 
                                     return  null;
                                 else {
-                                    res.cookie('access_token', token, {
-                                        maxAge: 365 * 24 * 60 * 60 * 100,//life time
-                                        httpOnly: true,//only http can read token
-                                        //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
-                                    })
+                                    // res.cookie('access_token', token, {
+                                    //     maxAge: 365 * 24 * 60 * 60 * 100,//life time
+                                    //     httpOnly: true,//only http can read token
+                                    //     //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
+                                    // })
                                     res.json({
                                         token,
                                         user: {
