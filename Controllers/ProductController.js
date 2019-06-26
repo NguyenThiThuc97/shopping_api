@@ -187,5 +187,8 @@ module.exports =
         util.getProductDetail(product_id, size, color).then(result => {
             res.json(result.details[0])
         })
+    },
+    sumMoney : function(req, res){
+        res.json(util.sumMoney(req.body))
     }
 };

@@ -64,5 +64,20 @@ module.exports =
             }
             
         })
+    },
+    findCategory: function(req, res){
+        var key_word = req.params.key_word
+        CategoryModel.find({name : {$regex : key_word, $options: 'i'}}).then((result, error) => {//.limit(5);
+            var product_list = []
+            result.map((item, index) => {
+                if(item.products){
+                    item.products.map((item1, index1) => {
+                        product_list.push(item1)
+                    })
+                }
+            })
+            
+            res.json(product_list)
+        })
     }
 };

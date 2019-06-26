@@ -83,5 +83,43 @@ class ProductUtil extends Util {
                                 return res
                             })
     }
+
+    sumMoney(products){
+        var sum = products.map((item, index) => {
+            this.getSalePrice(item).then(result =>{
+                sum += item.price - result
+                console.log(result)
+            })
+        })
+        return sum
+        // var result = products.reduce(function(sum, item) { 
+        //     // return the sum with previous value
+        //     return this.getSalePrice(item).then(result => {
+        //         sum = sum + result
+        //     })
+        //     // return sum = sum + item.price
+        //     // set initial value as 0
+        // },0);
+        
+        // console.log(result);
+    }
+    getSalePrice(product){
+        return ProductModel.findOne({id : product.id}).then(res => {
+            
+            if(res.sale){
+                switch(res.sale.name){
+                    case "percent":
+                        return product.price * product.sale.calculation/100
+                    case "money":
+                        return product.sale.calculation
+                    default:
+                        return 0
+                }
+            }
+            else{
+                return 0
+            }
+        })
+    }
 }
 module.exports = new ProductUtil()

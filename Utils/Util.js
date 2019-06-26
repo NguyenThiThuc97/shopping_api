@@ -75,4 +75,16 @@ module.exports = class Util {
             return result
         })
     }
+    findUserWithUsernameOrId(Model, username, type = "username"){
+        if(type === "username"){
+            return Model.find({username : username}).then(res => {
+                return result
+            })
+        }
+        else if(type === "id"){
+            return Model.find({id : username}).then(res => {
+                return result
+            })
+        }
+    }
 }

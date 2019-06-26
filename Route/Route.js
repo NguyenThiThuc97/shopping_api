@@ -12,6 +12,7 @@ router.route('/category/:id').get(category.getOne);
 router.route('/category/create').post(category.create);
 router.route('/category/edit').post(category.edit);
 router.route('/category/delete/:id').get(category.delete)
+router.route("/find/:key_word").get(category.findCategory)
 
 /*2. customer*/ 
 var storageUser = multer.diskStorage({
@@ -78,5 +79,9 @@ router.route('/product-detail/:id').get(product.getAllProductDetail);
 router.route('/product-detail/:id/:size/:color').get(product.getProductDetail);
 router.route('/product-detail/create').post(product.addProductDetail);
 router.route('/product-detail/delete/:id/:size/:color').get(product.deleteProductDetail);
+router.route('/sum-money').post(product.sumMoney)
+
+//orders
+const orders = require('./../Controllers/OrdersController');
 
 module.exports = router
