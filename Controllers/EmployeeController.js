@@ -16,7 +16,6 @@ module.exports =
         })
     },
     create: function(req, res){
-        console.log("create emloyee")
         var newItem = new EmployeeModel({
             username : req.body.username,
             fullname : req.body.fullname,

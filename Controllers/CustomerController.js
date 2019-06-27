@@ -1,5 +1,7 @@
 const util = require('./../Utils/CustomerUtil')
 const CustomerModel = require('./../Models/Customer')
+const jwt = require('jsonwebtoken');
+const config = require('./../config/constant');
 
 module.exports = 
 {

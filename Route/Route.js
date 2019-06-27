@@ -39,7 +39,7 @@ router.route('/customer/delete/:id').get(customer.getOne);
 /*3. employee*/ 
 const employee = require('./../Controllers/EmployeeController');
 router.route('/employee/login').post(employee.login)
-router.route('/employee').get(auth, employee.get);
+router.route('/employee').get(employee.get);
 router.route('/employee/:id').get(employee.getOne);
 router.route('/employee/create').post(uploadUser.single("image"), employee.create);
 router.route('/employee/edit').post(employee.edit);
@@ -83,5 +83,10 @@ router.route('/sum-money').post(product.sumMoney)
 
 //orders
 const orders = require('./../Controllers/OrdersController');
+router.route('/orders').get(orders.get)
+router.route('/orders/:id').get(orders.getOne)
+router.route('/orders/create').post(orders.create)
+router.route('/orders/edit').post(orders.edit)
+router.route('/orders/delete/:id').get(orders.delete)
 
 module.exports = router

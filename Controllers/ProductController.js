@@ -189,6 +189,6 @@ module.exports =
         })
     },
     sumMoney : function(req, res){
-        res.json(util.sumMoney(req.body))
+        res.json(util.sumMoney(req.body))//products list
     }
 };

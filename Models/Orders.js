@@ -16,6 +16,7 @@ const ItemSchema = new Schema({
     },
     customer : {
         type : [Customer.schema],
+        // type : Number,
         required : true
     },
     products : {
@@ -25,7 +26,11 @@ const ItemSchema = new Schema({
     status : {
         type: {},//when orders bill => status = {id:1, name: "Cho thanh toan"}.
                 //when update status = {id : 2, name : "da thanh toan"} or status = {id : 3, "Huy don hang"} || cho xac nhan huy don hang
-        required : true
+        required : true,
+        default : {
+            id : 1,
+            name : "waiting confirm"
+        }
     },
     money : {
         type: Number,

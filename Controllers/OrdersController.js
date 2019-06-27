@@ -1,5 +1,6 @@
 const util = require('./../Utils/SaleUtil')
 const OrdersModel = require('./../Models/Orders')
+const ProductUtil = require('./../Utils/ProductUtil')
 
 module.exports = 
 {
@@ -16,12 +17,15 @@ module.exports =
     create: function(req, res){
         var customer = req.body.customer
         var products = req.body.products
-        // var 
-        if(req.body.name){
-            var newItem = new SaleModel({
-                customer : req.body.customer,
-                calculation : req.body.calculation
+        // console.log(customer, products)
+        var money = ProductUtil.sumMoney(products)
+        if(customer && products){
+            var newItem = new OrdersModel({
+                customer : customer,
+                products : products,
+                money : money
             })
+            console.log(newItem)
             util.create(newItem).then(result => {
                 res.json(result)
             })
@@ -32,18 +36,16 @@ module.exports =
         
     },
     edit: function(req, res){
-        var id = req.body.id
-        var name = req.body.name
-        var calculation = parseInt(req.body.calculation) 
+        var status = req.body.status
         var item = {
-            id,name,calculation
+            status
         }
-        util.editItem(SaleModel, item).then(result => {
+        util.editItem(OrdersModel, item).then(result => {
             res.json(result)
         })
     },
     delete: function(req, res){
-        util.delete(SaleModel, req.params.id).then(result => {
+        util.delete(OrdersModel, req.params.id).then(result => {
             res.json(result)
         })
     }
