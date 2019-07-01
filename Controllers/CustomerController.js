@@ -128,7 +128,7 @@ module.exports =
                 })
             }
             else{//login with username
-                util.login(CustomerModel, result2.id, req.body.password).then(result => {
+                util.login(CustomerModel, result1.id, req.body.password).then(result => {
                     if(result){
                         jwt.sign(
                             { id: result.id },
