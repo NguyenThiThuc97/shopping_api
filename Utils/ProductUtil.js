@@ -85,28 +85,27 @@ class ProductUtil extends Util {
     }
 
     sumMoney(products){
-        var result = products.reduce(function(sum, item) {
-            return sum += item.price
-            // set initial value as 0
-        }, 0);
-        return result - this.getSalePrice(products)
-    }
-    getSalePrice(products){
-        return products.reduce((sum, product) => {
-            if(product.sale){
-                switch(product.sale.name){
-                    case "percent":
-                        return sum += product.price * product.sale.calculation/100
-                    case "money":
-                        return sum += product.sale.calculation
-                    default:
-                        return sum += 0
+        var result = products.reduce((sum, product) => {
+            if(!product.product.sale){
+                
+                sum += product.details.reduce((sum_detail, product_detail) => {
+                    return sum_detail += product_detail.price * product_detail.quantity
+                }, 0)
+            }
+            else 
+                if(product.product.sale.name == "money"){
+                    sum += product.details.reduce((sum_detail, product_detail) => {
+                        return sum_detail += (product_detail.price - product.product.sale.calculation) * product_detail.quantity
+                    }, 0)
                 }
-            }
-            else{
-                return sum += 0
-            }
+                else if(product.product.sale.name == "percent") {
+                    sum += product.details.reduce((sum_detail, product_detail) => {
+                        return sum_detail += product_detail.price * (1- product.product.sale.calculation/100) * product_detail.quantity
+                    }, 0)
+                }
+            return sum;
         }, 0)
+        return result;
     }
 }
 module.exports = new ProductUtil()

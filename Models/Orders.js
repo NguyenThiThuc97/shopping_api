@@ -20,7 +20,24 @@ const ItemSchema = new Schema({
         required : true
     },
     products : {
-        type : [Product.schema],
+        type : [Object],
+        /*
+        [
+            {
+                product : [Product.Schema],
+                details : [
+                    {
+                        size : "",
+                        color : "",
+                        quantity : 0,
+                        price : 0
+                    },
+                    ...
+                ]
+            },
+            ...
+        ]
+        */
         required : true
     },
     status : {
