@@ -11,7 +11,7 @@ module.exports =
         })
     },
     getOne: function(req, res){
-        util.getOne(CustomerModel).then(result => {
+        util.getOne(CustomerModel, req.params.id).then(result => {
             res.json(result)
         })
     },

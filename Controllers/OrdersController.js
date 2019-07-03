@@ -2,6 +2,7 @@ const util = require('./../Utils/SaleUtil')
 const OrdersModel = require('./../Models/Orders')
 const CustomerModel = require('./../Models/Customer')
 const ProductUtil = require('./../Utils/ProductUtil')
+const jwt = require('jsonwebtoken');
 
 module.exports = 
 {
@@ -20,20 +21,22 @@ module.exports =
         // Verify token
         // const decoded = jwt.verify(token, config.get('jwtSecret'));
         const decoded_token = jwt.verify(customer_id, 'sl_myJwtSecret');
-        var customer = CustomerModel.findOne({id : decoded_token}).then(customer => {return customer})
+        var customer = CustomerModel.findOne({id : parseInt(decoded_token.id)}).then(customer => {return customer})
         var products = req.body.products
         // console.log(customer, products)
         var money = ProductUtil.sumMoney(products)
         if(customer && products){
-            var newItem = new OrdersModel({
-                customer : customer,
-                products : products,
-                money : money
-            })
-            console.log(newItem)
-            util.create(newItem).then(result => {
-                res.json(result)
-            })
+            // var newItem = new OrdersModel({
+            //     customer : customer,
+            //     products : products,
+            //     money : money
+            // })
+            // console.log(newItem)
+            // util.create(newItem).then(result => {
+            //     res.json(result)
+            // })
+            console.log(customer,products)
+            res.json("aaa")
         }
         else{
             res.json("Cannot save!")
