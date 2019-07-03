@@ -1,5 +1,6 @@
 const util = require('./../Utils/SaleUtil')
 const OrdersModel = require('./../Models/Orders')
+const CustomerModel = require('./../Models/Customer')
 const ProductUtil = require('./../Utils/ProductUtil')
 
 module.exports = 
@@ -15,7 +16,11 @@ module.exports =
         })
     },
     create: function(req, res){
-        var customer = req.body.customer
+        var customer_id = req.body.customer
+        // Verify token
+        // const decoded = jwt.verify(token, config.get('jwtSecret'));
+        const decoded_token = jwt.verify(customer_id, 'sl_myJwtSecret');
+        var customer = CustomerModel.findOne({id : decoded_token}).then(customer => {return customer})
         var products = req.body.products
         // console.log(customer, products)
         var money = ProductUtil.sumMoney(products)
@@ -33,7 +38,6 @@ module.exports =
         else{
             res.json("Cannot save!")
         }
-        
     },
     edit: function(req, res){
         var status = req.body.status
