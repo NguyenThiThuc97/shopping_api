@@ -1,11 +1,16 @@
-const OrderModel = require('./../Models/Orders') 
+const CustomerModel = require('./../Models/Customer')
 const Util = require('./Util')
 
 class OrdersUtil extends Util {
-    // get(id, item){
-    //     return  CategoryModel.findOneAndUpdate({id : id}, {$push : {"products" : item}}, { upsert: true }).then(result => {
-    //         return result
-    //     })
-    // }
+    edit(id, item){
+        return  CustomerModel.findOneAndUpdate({id : id}, {$push : {"orders" : item}}, { upsert: true }).then(result => {
+            return result
+        })
+    }
+    getOrdersOfCustomer(customer_id){
+        return CustomerModel.find({id : customer_id}).then(result => {
+            return result.orders
+        })
+    }
 }
 module.exports = new OrdersUtil()

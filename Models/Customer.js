@@ -1,6 +1,6 @@
+
 const mongoose = require("mongoose")
 const AutoIncrement = require('mongoose-sequence')(mongoose)
-
 const Schema = mongoose.Schema
 
 const ItemSchema = new Schema({
@@ -34,6 +34,10 @@ const ItemSchema = new Schema({
     password: {
         type : String,
         required : true
+    },
+    orders : {
+        type : [Object],
+        default : []
     }
 })
 ItemSchema.plugin(AutoIncrement, {id : 'CustomerIdAuto', inc_field : 'id'})

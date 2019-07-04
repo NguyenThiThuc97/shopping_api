@@ -87,6 +87,7 @@ router.route('/orders').get(orders.get)
 router.route('/orders/:id').get(orders.getOne)
 router.route('/orders/create').post(orders.create)
 router.route('/orders/edit').post(orders.edit)
-router.route('/orders/delete/:id').get(orders.delete)
+router.route('/orders/delete/:id').get(orders.delete)//not using delete method, only change this status
+router.route('/orders/customer/:id').get(orders.getOrdersOfCutomer)
 
 module.exports = router

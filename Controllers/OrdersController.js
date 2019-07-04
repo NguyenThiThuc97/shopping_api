@@ -1,4 +1,4 @@
-const util = require('./../Utils/SaleUtil')
+const util = require('./../Utils/OrdersUtil')
 const OrdersModel = require('./../Models/Orders')
 const CustomerModel = require('./../Models/Customer')
 const ProductUtil = require('./../Utils/ProductUtil')
@@ -17,34 +17,33 @@ module.exports =
         })
     },
     create: function(req, res){
-        var customer_id = req.body.customer
-        // Verify token
-        // const decoded = jwt.verify(token, config.get('jwtSecret'));
-        const decoded_token = jwt.verify(customer_id, 'sl_myJwtSecret');
-        var customer = CustomerModel.findOne({id : parseInt(decoded_token.id)}).then(customer => {return customer})
-        var products = req.body.products
-        // console.log(customer, products)
-        var money = ProductUtil.sumMoney(products)
-        if(customer && products){
-            // var newItem = new OrdersModel({
-            //     customer : customer,
-            //     products : products,
-            //     money : money
-            // })
-            // console.log(newItem)
-            // util.create(newItem).then(result => {
-            //     res.json(result)
-            // })
-            console.log(customer,products)
-            res.json("aaa")
-        }
-        else{
-            res.json("Cannot save!")
-        }
+        CustomerModel.findOne({id : parseInt(jwt.verify(req.body.customer, 'sl_myJwtSecret').id)}).then(customer => {
+            var products = req.body.products
+            // console.log(customer, products)
+            var money = ProductUtil.sumMoney(products)
+            if(customer && products){
+                var newItem = new OrdersModel({
+                    customer : customer,
+                    products : products,
+                    money : money
+                })
+                util.create(newItem).then(result => {
+                    util.edit(customer.id, newItem).then(result1 => {
+                        res.json({result, result1})
+                    })
+                })
+            }
+            else{
+                res.json("Cannot save!")
+            }
+        })
+        
     },
     edit: function(req, res){
+        var id = req.body.id
         var status = req.body.status
         var item = {
+            id,
             status
         }
         util.editItem(OrdersModel, item).then(result => {
@@ -53,6 +52,11 @@ module.exports =
     },
     delete: function(req, res){
         util.delete(OrdersModel, req.params.id).then(result => {
+            res.json(result)
+        })
+    },
+    getOrdersOfCutomer: function(req, res){
+        util.getOrdersOfCustomer(req.params.id).then(result => {
             res.json(result)
         })
     }

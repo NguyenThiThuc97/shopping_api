@@ -15,7 +15,7 @@ const ItemSchema = new Schema({
         default : Date.now
     },
     customer : {
-        type : [Customer.schema],
+        type : Customer.schema,
         // type : Number,
         required : true
     },
@@ -41,8 +41,15 @@ const ItemSchema = new Schema({
         required : true
     },
     status : {
-        type: {},//when orders bill => status = {id:1, name: "Cho thanh toan"}.
-                //when update status = {id : 2, name : "da thanh toan"} or status = {id : 3, "Huy don hang"} || cho xac nhan huy don hang
+        type: {},/*when orders bill => status = {id : 1, name : "waiting for confirm"}.
+                [
+                    {id : 2, status : "Confirmed"},
+                    {id : 3, status : "Shipping"},
+                    {id : 4, status : "Finish"},
+                    {id : 5, status : "Canceled (Customer)"},
+                    {id : 6, status : "Canceled (Shop)"}
+                ]
+                */
         required : true,
         default : {
             id : 1,
