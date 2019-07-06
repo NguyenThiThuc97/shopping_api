@@ -190,5 +190,17 @@ module.exports =
     },
     sumMoney : function(req, res){
         res.json(util.sumMoney(req.body))//products list
+    },
+    findSale: function(req, res){
+        ProductModel.find({$where : function(){
+            return this.sale !=null
+        }}).sort({time_import : 'desc'}).then(result => {
+            res.json(result)
+        })
+    },
+    findArrival: function(req, res){
+        ProductModel.find().sort({time_import : "desc"}).then(result => {
+            res.json(result)
+        })
     }
 };

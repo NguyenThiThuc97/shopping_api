@@ -46,8 +46,10 @@ module.exports =
             id,
             status
         }
-        util.editItem(OrdersModel, item).then(result => {
-            res.json(result)
+        util.editItem(OrdersModel, item).then(result1 => {
+            OrdersModel.findOne({id : id}).then(result => {
+                res.json(result)
+            })
         })
     },
     delete: function(req, res){

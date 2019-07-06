@@ -4,10 +4,10 @@
   "description": "clothes shop website for graduation thesis fit hcmute",
   "main": "index.js",
   "scripts": {
-    "client-intall": "npm install --prefix abc",
+    "client-intall": "npm install --prefix clothes_shop",
     "start": "node server.js",
     "server": "nodemon server.js",
-    "client": "npm start --prefix abc",
+    "client": "npm start --prefix clothes_shop",
     "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "repository": {

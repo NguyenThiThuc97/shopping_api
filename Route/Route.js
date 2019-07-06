@@ -74,6 +74,8 @@ router.route('/product/:id').get(product.getOne);
 router.route('/product/create').post(uploadProduct.single("images"), product.create);
 router.route('/product/edit').post(uploadProduct.single("images"), product.edit);
 router.route('/product/delete/:id').get(product.delete);
+router.route('/find-sale').get(product.findSale);
+router.route('/find-arrival').get(product.findArrival);
 //product detail 
 router.route('/product-detail/:id').get(product.getAllProductDetail);
 router.route('/product-detail/:id/:size/:color').get(product.getProductDetail);

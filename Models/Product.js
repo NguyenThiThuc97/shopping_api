@@ -31,7 +31,8 @@ const ItemSchema = new Schema({
     },
     sale : {
         // type : [Sale.schema]
-        type : Sale.schema
+        type : Sale.schema,
+        default : null
     },
 	time_import : {
 		type : Date,
