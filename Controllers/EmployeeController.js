@@ -102,7 +102,8 @@ module.exports =
                                                     type:"employee",
                                                     username: result.username,
                                                     email: result.email
-                                                }
+                                                },
+                                                role : result.role
                                             })
                                         }
                                     }

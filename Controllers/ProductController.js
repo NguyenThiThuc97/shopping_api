@@ -74,10 +74,9 @@ module.exports =
                         imagesN = images.originalname
                     }
                     if(imagesN.length !== 0){
-                        return ProductModel.findOneAndUpdate({id:product_id}, {$set:{
+                        var newItem = {
                             title : title,
                             description : description,
-                            time_import : time,
                             images : [imagesN],
                             manufacture_details : {
                                 name : manufacture_details_name,
@@ -86,21 +85,26 @@ module.exports =
                             price : price,
                             sale : sale,
                             cate_id : cate_id
-
-                        }}).then((result, error) => {
+                        }
+                        return ProductModel.findOneAndUpdate({id:product_id}, newItem).then((result, error) => {
                             if(error){
                                 res.json({status : false})
                             }
                             else{
                                 return ProductModel.findOne({id : result.id}).then(resss => {
-                                    // console.log(resss)
-                                    res.json({status : true, result : resss})
+                                    var cate_id = resss.cate_id
+                                    return CategoryModel.findOneAndUpdate(
+                                        {id : cate_id, 'products.id' : resss.id}, 
+                                        {$set : {"products.$" : resss}}, { upsert: true }).then((result1, error1) => {
+                                        console.log(result1)
+                                        res.json({status : true, result : resss})
+                                    })
                                 })
                             }
                         })
                     }
                     else{
-                        return ProductModel.findOneAndUpdate({id:product_id}, {$set:{
+                        var newItem = {
                             title : title,
                             description : description,
                             time_import : time,
@@ -111,18 +115,22 @@ module.exports =
                             price : price,
                             sale : sale,
                             cate_id : cate_id
-
-                        }}).then((result, error) => {
+                        }
+                        return ProductModel.findOneAndUpdate({id:product_id}, {$set : newItem}).then((result, error) => {
                             if(error){
                                 res.json({status : false})
                             }
                             else{
-                            // console.log(result)
-                            return ProductModel.findOne({id : result.id}).then(resss => {
-                                // console.log(resss)
-                                res.json({status : true, result : resss})
-                            })
-                            
+                                // console.log(result)
+                                return ProductModel.findOne({id : result.id}).then(resss => {
+                                    var cate_id = res.cate_id
+                                    return CategoryModel.findOneAndUpdate(
+                                        {id : cate_id, 'products.id' : resss.id}, 
+                                        {$set : {"products.$" : resss}}, { upsert: true }).then((result1, error1) => {
+                                        console.log(result1)
+                                        res.json({status : true, result : resss})
+                                    })
+                                })
                             }
                         })
                     }

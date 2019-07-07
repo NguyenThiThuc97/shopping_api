@@ -76,7 +76,6 @@ module.exports =
                     })
                 }
             })
-            
             res.json(product_list)
         })
     }
