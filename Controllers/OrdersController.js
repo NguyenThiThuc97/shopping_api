@@ -29,19 +29,19 @@ module.exports =
                 })
                 util.create(newItem).then(result => {
                     util.edit(customer.id, newItem).then(result1 => {
-                        products.map((product, index) => {
-                            product.details.map((product_detail, index1) => {
-                                ProductModel.findOne(
+                        var updates = products.map((product, index) => {
+                            return product.details.map((product_detail, index1) => {
+                                return ProductModel.findOneAndUpdate(
                                     {id: product.id}, 
                                     {$elemMatch : 
                                         {color: product_detail.color, size : product_detail.size}}, 
-                                    ).exec((resultsss, error) => {
-                                        console.log("aaaaaaaaaaaaa")
-                                        if(!error){
-                                            resultsss.save()
-                                        }
-                                })
+                                        {$set:{quantity: quantity-product_detail.quantity}},
+                                        {$upsert:true}
+                                    )
                             })
+                        })
+                        Promise.all(updates).then(result => {
+                            console.log(res)
                         })
                         res.json({result, result1})
                     })
