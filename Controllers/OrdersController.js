@@ -1,6 +1,7 @@
 const util = require('./../Utils/OrdersUtil')
 const OrdersModel = require('./../Models/Orders')
 const CustomerModel = require('./../Models/Customer')
+const ProductModel = require('./../Models/Product')
 const ProductUtil = require('./../Utils/ProductUtil')
 const jwt = require('jsonwebtoken');
 
@@ -19,7 +20,6 @@ module.exports =
     create: function(req, res){
         CustomerModel.findOne({id : parseInt(jwt.verify(req.body.customer, 'sl_myJwtSecret').id)}).then(customer => {
             var products = req.body.products
-            // console.log(customer, products)
             var money = ProductUtil.sumMoney(products)
             if(customer && products){
                 var newItem = new OrdersModel({
@@ -29,6 +29,20 @@ module.exports =
                 })
                 util.create(newItem).then(result => {
                     util.edit(customer.id, newItem).then(result1 => {
+                        products.map((product, index) => {
+                            product.details.map((product_detail, index1) => {
+                                ProductModel.findOne(
+                                    {id: product.id}, 
+                                    {$elemMatch : 
+                                        {color: product_detail.color, size : product_detail.size}}, 
+                                    ).exec((resultsss, error) => {
+                                        console.log("aaaaaaaaaaaaa")
+                                        if(!error){
+                                            resultsss.save()
+                                        }
+                                })
+                            })
+                        })
                         res.json({result, result1})
                     })
                 })

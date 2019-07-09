@@ -87,14 +87,6 @@ module.exports =
                                         if(err) 
                                             return  null;
                                         else {
-                                            // // res.setHeader('Cache-Control', 'private');
-                                            // res.cookie('access_token', token, {
-                                            //     maxAge: 365 * 24 * 60 * 60 * 100,//life time
-                                            //     httpOnly: true,//only http can read token
-                                            //     //secure: true;//ssl nếu có, nếu chạy localhost thì comment nó lại
-                                            // })
-                                            // var username = req.cookies['access_token'];
-                                            // console.log(username ? username : "cookie not set")
                                             res.json({
                                                 token,
                                                 user: {
@@ -143,7 +135,8 @@ module.exports =
                                             type:"employee",
                                             username: result.username,
                                             email: result.email
-                                        }
+                                        },
+                                        role : result.role
                                     })
                                 }
                             }
