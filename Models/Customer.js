@@ -35,10 +35,10 @@ const ItemSchema = new Schema({
         type : String,
         required : true
     },
-    orders : {
-        type : [Object],
-        default : []
-    }
+    // orders : {
+    //     type : [Object],
+    //     default : []
+    // }
 })
 ItemSchema.plugin(AutoIncrement, {id : 'CustomerIdAuto', inc_field : 'id'})
 

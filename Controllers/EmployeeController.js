@@ -10,6 +10,12 @@ module.exports =
             res.json(result)
         })
     },
+    getProfile: function(req, res){
+        var id = parseInt(jwt.verify(req.params.id, 'sl_myJwtSecret').id)
+        util.getOne(EmployeeModel, id).then(result => {
+            res.json(result)
+        })
+    },
     getOne: function(req, res){
         util.getOne(EmployeeModel, req.params.id).then(result => {
             res.json(result)
@@ -26,22 +32,43 @@ module.exports =
             phone : req.body.phone,
             email : req.body.email
         })
-        util.create(newItem).then(result => {
-            res.json(result)
+        util.checkAlias(username).then(result_check => {
+            if(result_check){
+                util.create(newItem).then(result => {
+                    res.json({result:result, status : true})
+                })
+            }
+            else{
+                res.json({status : "Username is used!", status : false})
+            }
         })
     },
     edit: function(req, res){
         var item_edit = req.body
-        var emp_id = item_edit.id
-        var emp_usrname = item_edit.username
+        
+        var emp_id = parseInt(jwt.verify(item_edit.id, 'sl_myJwtSecret').id)
         var emp_fullname = item_edit.fullname
-        var emp_role = item_edit.role
-        EmployeeModel.findOneAndUpdate({id : emp_id}, {$set : 
-                                                                {username : emp_usrname,
-                                                                fullname : emp_fullname,
-                                                                emp_role : emp_role}
-                                                        }).then(result => {
-            res.json(result)
+        var emp_email = item_edit.email
+        var emp_phone = item_edit.phone
+        var emp_address = item_edit.address
+
+        EmployeeModel.findOneAndUpdate(
+            {id : emp_id}, 
+            {$set : {
+                    fullname : emp_fullname,
+                    email : emp_email,
+                    phone : emp_phone,
+                    address : emp_address
+                }
+            }).then((result, error) => {
+            if(error) {
+                res.json({status : false})
+            }
+            else{
+                EmployeeModel.findOne({id: emp_id}).then(get_emp  => {
+                    res.json({status : true, result : get_emp})
+                })
+            }
         })
     },
     delete: function(req, res){
@@ -50,12 +77,20 @@ module.exports =
         })
     },
     changePwd: function(req, res){
-        if(req.body.new_pwd === req.body.old_pwd){
-            util.changePwd(EmployeeModel, req).then(result => {
+        var item = req.body
+
+        var id = item.id
+        var new_password = item.new_password
+        var confirm_new_password = item.confirm_new_password
+        var old_password = item.old_password
+
+        var emp_id = parseInt(jwt.verify(id, 'sl_myJwtSecret').id)
+
+        if(confirm_new_password === new_password){
+            util.changePwd(EmployeeModel, emp_id, new_password, old_password).then(result => {
                 if(result){
                     res.json({
                         status : true,
-                        result : result
                     })
                 }
                 else{

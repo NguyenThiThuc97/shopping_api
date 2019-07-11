@@ -24,7 +24,7 @@ const ItemSchema = new Schema({
         type : String
     },
     role : {
-        type : Object,
+        type : String,
         required : true
     },
     email : {

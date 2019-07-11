@@ -35,6 +35,7 @@ router.route('/customer/create').post(uploadUser.single("image"), customer.creat
 router.route('/customer/edit').post(customer.edit);
 router.route('/customer/change_password').post(customer.changePwd);
 router.route('/customer/delete/:id').get(customer.getOne);
+router.route('/customer/profile/:id').get(customer.getProfile);
 
 /*3. employee*/ 
 const employee = require('./../Controllers/EmployeeController');
@@ -45,6 +46,7 @@ router.route('/employee/create').post(uploadUser.single("image"), employee.creat
 router.route('/employee/edit').post(employee.edit);
 router.route('/employee/change_password').post(employee.changePwd);
 router.route('/employee/delete/:id').get(employee.delete);
+router.route('/employee/profile/:id').get(employee.getProfile);
 
 /*4. sale*/ 
 const sale = require('./../Controllers/SaleController');
@@ -81,6 +83,7 @@ router.route('/product-detail/:id').get(product.getAllProductDetail);
 router.route('/product-detail/:id/:size/:color').get(product.getProductDetail);
 router.route('/product-detail/create').post(product.addProductDetail);
 router.route('/product-detail/delete/:id/:size/:color').get(product.deleteProductDetail);
+router.route('/product-detail/edit').post(product.updateProductDetail)
 router.route('/sum-money').post(product.sumMoney)
 
 //orders

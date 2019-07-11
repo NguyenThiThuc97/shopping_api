@@ -96,7 +96,7 @@ module.exports =
                                     return CategoryModel.findOneAndUpdate(
                                         {id : cate_id, 'products.id' : resss.id}, 
                                         {$set : {"products.$" : resss}}, { upsert: true }).then((result1, error1) => {
-                                        console.log(result1)
+                                        // console.log(result1)
                                         res.json({status : true, result : resss})
                                     })
                                 })
@@ -107,7 +107,7 @@ module.exports =
                         var newItem = {
                             title : title,
                             description : description,
-                            time_import : time,
+                            // time_import : time,
                             manufacture_details : {
                                 name : manufacture_details_name,
                                 model : manufacture_details_model
@@ -116,18 +116,17 @@ module.exports =
                             sale : sale,
                             cate_id : cate_id
                         }
-                        return ProductModel.findOneAndUpdate({id:product_id}, {$set : newItem}).then((result, error) => {
+                        return ProductModel.findOneAndUpdate({id:product_id}, newItem).then((result, error) => {
                             if(error){
                                 res.json({status : false})
                             }
                             else{
                                 // console.log(result)
                                 return ProductModel.findOne({id : result.id}).then(resss => {
-                                    var cate_id = res.cate_id
+                                    var cate_id = resss.cate_id
                                     return CategoryModel.findOneAndUpdate(
                                         {id : cate_id, 'products.id' : resss.id}, 
                                         {$set : {"products.$" : resss}}, { upsert: true }).then((result1, error1) => {
-                                        console.log(result1)
                                         res.json({status : true, result : resss})
                                     })
                                 })
@@ -148,7 +147,7 @@ module.exports =
             if(cate_id !== null){
                 util.delete(product_id, cate_id.cate_id).then(result => {
                     // console.log(result)
-                    res.json(result)
+                    res.json({result : result, status : true})
                 })
             }
             else{
@@ -195,6 +194,88 @@ module.exports =
         util.getProductDetail(product_id, size, color).then(result => {
             res.json(result.details[0])
         })
+    },
+    updateProductDetail: function(req, res){
+        var item_detail = req.body
+        console.log(item_detail)
+        var product_id = item_detail.product_id
+        var size = item_detail.size
+        var old_size = item_detail.old_size
+        var color = item_detail.color
+        var old_color = item_detail.old_color
+        var quantity = parseInt(item_detail.quantity)
+        var price = item_detail.price
+        //when not update size and color
+        if(old_color === color && old_size === size){
+            ProductModel.findOneAndUpdate({
+                id : product_id, 
+                details : {
+                    $elemMatch : {
+                        size : old_size, 
+                        color : old_color
+                    }
+                }
+            },
+            {$set : {
+                'details.$.quantity' : quantity,
+                'details.$.price' : price
+            }},
+            {upsert : true}).then((update_product, error) => {
+                if(error){
+                    res.json({status : false})
+                }
+                else{
+                    ProductModel.findOne({id : product_id}).then((detail_result, err) => {
+                        if(err){
+                            res.json({status : false})
+                        }
+                        else{
+                            res.json({status :true, result : detail_result.details})
+                        }
+                    })
+                }
+            })
+        }
+        //when update size and color
+        else{
+            ProductModel.findOne({id : product_id, details : {$elemMatch : {size : size, color : color}}}).then(find_product_detail => {
+                if(find_product_detail){
+                    res.json({status : false})
+                }
+                else {
+                    ProductModel.findOneAndUpdate({
+                        id : product_id, 
+                        details : {
+                            $elemMatch : {
+                                size : old_size, 
+                                color : old_color
+                            }
+                        }
+                    },
+                    {$set : {
+                        'details.$.size' : size, 
+                        'details.$.color': color,
+                        'details.$.quantity' : quantity,
+                        'details.$.price' : price
+                    }},
+                    {upsert : true}).then((update_product, error) => {
+                        if(error){
+                            res.json({status : false})
+                        }
+                        else{
+                            ProductModel.findOne({id : product_id}).then((detail_result, err) => {
+                                if(err){
+                                    res.json({status : false})
+                                }
+                                else{
+                                    res.json({status :true, result : detail_result.details})
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+        }
     },
     sumMoney : function(req, res){
         res.json(util.sumMoney(req.body))//products list

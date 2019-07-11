@@ -15,6 +15,12 @@ module.exports =
             res.json(result)
         })
     },
+    getProfile: function(req, res){
+        var id = parseInt(jwt.verify(req.params.id, 'sl_myJwtSecret').id)
+        util.getOne(CustomerModel, id).then(result => {
+            res.json(result)
+        })
+    },
     create: function(req, res){
         if(req.body.password === req.body.confirm_password){
             var newItem = new CustomerModel({
@@ -34,28 +40,27 @@ module.exports =
         }
     },
     edit: function(req, res){
-        var cus_id = req.body.id
-        var cus_username = req.body.username
+        var cus_id = parseInt(jwt.verify(req.body.id, 'sl_myJwtSecret').id)
         var cus_fullname = req.body.fullname
         var cus_address = req.body.address
         var cus_phone = req.body.phone
         var cus_email = req.body.email
-        CustomerModel.findOneAndUpdate({id : cus_id}, {$set : {
-            username : cus_username,
-            fullname : cus_fullname,
-            address : cus_address,
-            phone : cus_phone,
-            email : cus_email
-        }}).then((error, result) => {
-            if(error){
-                res.json({
-                    status : false,
-                })
+
+        CustomerModel.findOneAndUpdate(
+            {id : cus_id}, 
+            {$set : {
+                    fullname : cus_fullname,
+                    email : cus_email,
+                    phone : cus_phone,
+                    address : cus_address
+                }
+            }).then((result, error) => {
+            if(error) {
+                res.json({status : false})
             }
-            else {
-                res.json({
-                    status : true,
-                    result : result
+            else{
+                CustomerModel.findOne({id: cus_id}).then(get_cus  => {
+                    res.json({status : true, result : get_cus})
                 })
             }
         })
@@ -66,12 +71,20 @@ module.exports =
         })
     },
     changePwd: function(req, res){
-        if(req.body.new_pwd === req.body.old_pwd){
-            util.changePwd(CustomerModel, req).then(result => {
+        var item = req.body
+
+        var id = item.id
+        var new_password = item.new_password
+        var confirm_new_password = item.confirm_new_password
+        var old_password = item.old_password
+
+        var cus_id = parseInt(jwt.verify(id, 'sl_myJwtSecret').id)
+
+        if(confirm_new_password === new_password){
+            util.changePwd(CustomerModel, cus_id, new_password, old_password).then(result => {
                 if(result){
                     res.json({
                         status : true,
-                        result : result
                     })
                 }
                 else{
@@ -81,7 +94,11 @@ module.exports =
                 }
             })
         }
-        
+        else{
+            res.json({
+                status : false,
+            })
+        }
     },
 
     login: function(req, res){

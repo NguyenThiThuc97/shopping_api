@@ -27,24 +27,47 @@ module.exports =
                     products : products,
                     money : money
                 })
-                util.create(newItem).then(result => {
-                    util.edit(customer.id, newItem).then(result1 => {
-                        var updates = products.map((product, index) => {
-                            return product.details.map((product_detail, index1) => {
+                util.create(newItem).then((result, err) => {//create orders
+                    if(err){
+                        console.log("err", err)
+                        res.json(err)
+                    }
+                    else{
+                        // console.log("success")
+                        Promise.all(products.map(product => {
+                            return Promise.all(product.details.map(product_detail => {
+                                // console.log(product.product.id, product_detail.size, product_detail.color)
+                                
                                 return ProductModel.findOneAndUpdate(
-                                    {id: product.id}, 
-                                    {$elemMatch : 
-                                        {color: product_detail.color, size : product_detail.size}}, 
-                                        {$set:{quantity: quantity-product_detail.quantity}},
-                                        {$upsert:true}
+                                    {
+                                        "id" : product.product.id, 
+                                        "details" : {
+                                            $elemMatch : {
+                                                "color" : product_detail.color, 
+                                                "size" : product_detail.size
+                                            }
+                                        }
+                                    },
+                                    {$inc : {'details.$.quantity': - parseInt(product_detail.quantity)}},
+                                    { upsert: true }
                                     )
-                            })
+                                                    .then(product_detail_update => {return product_detail_update})
+                                // ProductModel.findOne(
+                                //     {id : product.id, details:{$elemMatch : 
+                                //         {size : product_detail.size, color : product_detail.color}}
+                                //     })
+                            })).then(product_detail_update_a => {return product_detail_update_a})
+                        })).then((resultsss, err) => {
+                            if(err){
+                                res.json({error : err, status : false})
+                            }
+                            else { 
+                                res.json({status : true})
+                            }
+                            // console.log(resultsss)
                         })
-                        Promise.all(updates).then(result => {
-                            console.log(res)
-                        })
-                        res.json({result, result1})
-                    })
+                    }
+                    
                 })
             }
             else{
@@ -72,7 +95,8 @@ module.exports =
         })
     },
     getOrdersOfCutomer: function(req, res){
-        util.getOrdersOfCustomer(req.params.id).then(result => {
+        var customer_id = parseInt(jwt.verify(req.params.id, 'sl_myJwtSecret').id)
+        util.getOrdersOfCustomer(customer_id).then(result => {
             res.json(result)
         })
     }

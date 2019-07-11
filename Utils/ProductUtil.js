@@ -85,27 +85,32 @@ class ProductUtil extends Util {
     }
 
     sumMoney(products){
-        var result = products.reduce((sum, product) => {
-            if(!product.product.sale){
-                
-                sum += product.details.reduce((sum_detail, product_detail) => {
-                    return sum_detail += product_detail.price * product_detail.quantity
-                }, 0)
-            }
-            else 
-                if(product.product.sale.name == "money"){
+        if(products){
+            var result = products.reduce((sum, product) => {
+                if(!product.product.sale){
+                    
                     sum += product.details.reduce((sum_detail, product_detail) => {
-                        return sum_detail += (product_detail.price - product.product.sale.calculation) * product_detail.quantity
+                        return sum_detail += product_detail.price * product_detail.quantity
                     }, 0)
                 }
-                else if(product.product.sale.name == "percent") {
-                    sum += product.details.reduce((sum_detail, product_detail) => {
-                        return sum_detail += product_detail.price * (1- product.product.sale.calculation/100) * product_detail.quantity
-                    }, 0)
-                }
-            return sum;
-        }, 0)
-        return result;
+                else 
+                    if(product.product.sale.name == "money"){
+                        sum += product.details.reduce((sum_detail, product_detail) => {
+                            return sum_detail += (product_detail.price - product.product.sale.calculation) * product_detail.quantity
+                        }, 0)
+                    }
+                    else if(product.product.sale.name == "percent") {
+                        sum += product.details.reduce((sum_detail, product_detail) => {
+                            return sum_detail += product_detail.price * (1- product.product.sale.calculation/100) * product_detail.quantity
+                        }, 0)
+                    }
+                return sum;
+            }, 0)
+            return result;
+        }
+        else{
+            return 0
+        }
     }
 }
 module.exports = new ProductUtil()

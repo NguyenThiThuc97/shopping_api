@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
         extended: true
 })); 
 //connect mongodb
-mongoose.connect("mongoURI:'mongodb://localhost/clothes_shop_db", { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false})
+mongoose.connect("mongodb://thucthuc:T123456@ds341557.mlab.com:41557/clothes_shop_db", { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false})
         .then(() => console.log("MongoDB was connected..."))
         .catch(err => console.log(err))
 
